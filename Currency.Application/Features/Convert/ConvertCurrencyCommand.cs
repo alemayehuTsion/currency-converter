@@ -2,7 +2,7 @@ using MediatR;
 
 namespace Currency.Application.Features.Convert;
 
-public sealed record ConvertCurrencyCommand(string From, string To, decimal Amount, DateOnly? Date)
+public sealed record ConvertCurrencyCommand(string From, string To, decimal Amount)
     : IRequest<ConvertCurrencyResult>;
 
 public sealed record ConvertCurrencyResult(
