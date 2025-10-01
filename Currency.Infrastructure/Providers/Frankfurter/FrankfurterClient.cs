@@ -16,9 +16,17 @@ public sealed class FrankfurterClient
 
     public Task<HttpResponseMessage> GetLatestAsync(string baseCurrency, CancellationToken ct)
     {
-        var b = string.IsNullOrWhiteSpace(baseCurrency) ? "EUR" : baseCurrency.Trim().ToUpperInvariant();
+        var b = string.IsNullOrWhiteSpace(baseCurrency)
+            ? "EUR"
+            : baseCurrency.Trim().ToUpperInvariant();
         var url = $"latest?base={Uri.EscapeDataString(b)}";
         _log.LogDebug("Frankfurter GET {Url}", url);
         return _http.GetAsync(url, ct);
+    }
+
+    public Task<HttpResponseMessage> RawGetAsync(string relativeUrl, CancellationToken ct)
+    {
+        _log.LogDebug("GET {Url}", relativeUrl);
+        return _http.GetAsync(relativeUrl, ct);
     }
 }
