@@ -5,7 +5,7 @@ using Microsoft.Extensions.Options;
 
 namespace Currency.Infrastructure.Caching;
 
-internal sealed class CachedExchangeRateProvider : IExchangeRateProvider
+public sealed class CachedExchangeRateProvider : IExchangeRateProvider
 {
     private readonly IExchangeRateProvider _inner;
     private readonly IMemoryCache _cache;

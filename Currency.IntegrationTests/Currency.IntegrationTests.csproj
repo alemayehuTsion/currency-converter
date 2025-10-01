@@ -20,4 +20,10 @@
     <Using Include="Xunit" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Currency.Api\Currency.Api.csproj" />
+    <ProjectReference Include="..\Currency.Application\Currency.Application.csproj" />
+    <ProjectReference Include="..\Currency.Domain\Currency.Domain.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -11,8 +11,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Currency.Domain", "Currency
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Currency.Infrastructure", "Currency.Infrastructure\Currency.Infrastructure.csproj", "{E0B27A77-8CF3-40B7-9CE6-245EC3121068}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Currency.Observability", "Currency.Observability\Currency.Observability.csproj", "{D2A8D31B-8DB2-4D42-BB77-A6FD7E434AD7}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Currency.UnitTests", "Currency.UnitTests\Currency.UnitTests.csproj", "{111F2758-4713-45DC-A69F-FF51A87572C8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Currency.IntegrationTests", "Currency.IntegrationTests\Currency.IntegrationTests.csproj", "{AF75FBE4-4886-4DC3-B754-4C00FB492E06}"

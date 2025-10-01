@@ -1,0 +1,456 @@
+{
+	"info": {
+		"_postman_id": "43fff68c-08f2-4bdb-a401-06a98b5fa192",
+		"name": "Currency Converter API Copy 2",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "1792616"
+	},
+	"item": [
+		{
+			"name": "1. Authentication",
+			"item": [
+				{
+					"name": "Get Token (Reader Role)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"  const body = pm.response.json() || {};",
+									"  const token = body.token || body.access_token || (body.data && body.data.token);",
+									"  const ttl = Number(body.expires_in || 3600);",
+									"  if (token) {",
+									"    pm.collectionVariables.set('token', token);",
+									"    pm.collectionVariables.set('token_expires_at', String(Date.now() + ttl * 1000));",
+									"    pm.collectionVariables.set('default_role', 'reader');",
+									"    console.log('Reader token set!');",
+									"  }",
+									"}"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/dev/token?roles=reader",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"dev",
+								"token"
+							],
+							"query": [
+								{
+									"key": "roles",
+									"value": "reader"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Token (Converter Role)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"  const body = pm.response.json() || {};",
+									"  const token = body.token || body.access_token || (body.data && body.data.token);",
+									"  const ttl = Number(body.expires_in || 3600);",
+									"  if (token) {",
+									"    pm.collectionVariables.set('token', token);",
+									"    pm.collectionVariables.set('token_expires_at', String(Date.now() + ttl * 1000));",
+									"    pm.collectionVariables.set('default_role', 'converter');",
+									"    console.log('Converter token set!');",
+									"  }",
+									"}"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/dev/token?roles=converter",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"dev",
+								"token"
+							],
+							"query": [
+								{
+									"key": "roles",
+									"value": "converter"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Token (Admin Role)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"  const body = pm.response.json() || {};",
+									"  const token = body.token || body.access_token || (body.data && body.data.token);",
+									"  const ttl = Number(body.expires_in || 3600);",
+									"  if (token) {",
+									"    pm.collectionVariables.set('token', token);",
+									"    pm.collectionVariables.set('token_expires_at', String(Date.now() + ttl * 1000));",
+									"    pm.collectionVariables.set('default_role', 'admin');",
+									"    console.log('Admin token set!');",
+									"  }",
+									"}"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/dev/token?roles=admin",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"dev",
+								"token"
+							],
+							"query": [
+								{
+									"key": "roles",
+									"value": "admin"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "2. Latest Rates",
+			"item": [
+				{
+					"name": "Get Latest Rates (Success)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/rates/latest?base=EUR",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"rates",
+								"latest"
+							],
+							"query": [
+								{
+									"key": "base",
+									"value": "EUR"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Latest Rates (Default Base)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{baseUrl}}/api/v1/rates/latest"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Latest Rates (Unauthorized)",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/rates/latest?base=EUR",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"rates",
+								"latest"
+							],
+							"query": [
+								{
+									"key": "base",
+									"value": "EUR"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "3. Currency Conversion",
+			"item": [
+				{
+					"name": "Convert EUR to USD (Success)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"from\": \"EUR\",\n  \"to\": \"USD\",\n  \"amount\": 150.50\n}"
+						},
+						"url": "{{baseUrl}}/api/v1/convert"
+					},
+					"response": []
+				},
+				{
+					"name": "Convert Forbidden Currency (PLN) [400 Bad Request]",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"from\": \"USD\",\n  \"to\": \"PLN\",\n  \"amount\": 100\n}"
+						},
+						"url": "{{baseUrl}}/api/v1/convert"
+					},
+					"response": []
+				},
+				{
+					"name": "Convert with Reader Role [403 Forbidden]",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"from\": \"EUR\",\n  \"to\": \"USD\",\n  \"amount\": 150.50\n}"
+						},
+						"url": "{{baseUrl}}/api/v1/convert"
+					},
+					"response": []
+				},
+				{
+					"name": "Convert with Invalid Amount [400 Bad Request]",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"from\": \"EUR\",\n  \"to\": \"USD\",\n  \"amount\": -100\n}"
+						},
+						"url": "{{baseUrl}}/api/v1/convert"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "4. Historical Rates",
+			"item": [
+				{
+					"name": "Get Historical Rates (Success)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/rates/history?base=USD&from=2024-05-01&to=2024-05-10&page=1&pageSize=10",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"rates",
+								"history"
+							],
+							"query": [
+								{
+									"key": "base",
+									"value": "USD"
+								},
+								{
+									"key": "from",
+									"value": "2024-05-01"
+								},
+								{
+									"key": "to",
+									"value": "2024-05-10"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "pageSize",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Historical Rates (Invalid Date Range) [400 Bad Request]",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/rates/history?base=USD&from=2024-05-10&to=2024-05-01&page=1&pageSize=10",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"rates",
+								"history"
+							],
+							"query": [
+								{
+									"key": "base",
+									"value": "USD"
+								},
+								{
+									"key": "from",
+									"value": "2024-05-10"
+								},
+								{
+									"key": "to",
+									"value": "2024-05-01"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "pageSize",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": {
+			"token": "{{token}}"
+		}
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"// Ensure baseUrl exists",
+					"if (!pm.collectionVariables.get('baseUrl')) {",
+					"  const envBase = pm.environment.get('baseUrl');",
+					"  pm.collectionVariables.set('baseUrl', envBase || 'http://localhost:5073');",
+					"}",
+					"",
+					"const now = Date.now();",
+					"const token = pm.collectionVariables.get('token') || pm.environment.get('token');",
+					"const exp = Number(pm.collectionVariables.get('token_expires_at') || 0);",
+					"",
+					"function setAuthHeader(t) {",
+					"  if (t) pm.request.headers.upsert({ key: 'Authorization', value: `Bearer ${t}`, disabled: false });",
+					"}",
+					"",
+					"// If we already have a valid token, just apply it",
+					"if (token && (!exp || now < exp)) {",
+					"  setAuthHeader(token);",
+					"} else {",
+					"  // No token or expired → try to fetch a fresh one (converter role by default)",
+					"  const url = `${pm.collectionVariables.get('baseUrl')}/dev/token?roles=${pm.collectionVariables.get('default_role') || 'converter'}`;",
+					"  pm.sendRequest({ url, method: 'GET' }, function (err, res) {",
+					"    if (!err && res && res.code === 200) {",
+					"      let json = {};",
+					"      try { json = res.json(); } catch(e) {}",
+					"      const newToken = json.token || json.access_token || (json.data && json.data.token);",
+					"      const ttl = Number(json.expires_in || 3600);",
+					"      if (newToken) {",
+					"        pm.collectionVariables.set('token', newToken);",
+					"        pm.collectionVariables.set('token_expires_at', String(Date.now() + ttl * 1000));",
+					"        setAuthHeader(newToken);",
+					"      }",
+					"    }",
+					"  });",
+					"}"
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:5073",
+			"type": "string"
+		},
+		{
+			"key": "token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "default_role",
+			"value": "converter",
+			"type": "string"
+		},
+		{
+			"key": "token_expires_at",
+			"value": ""
+		}
+	]
+}

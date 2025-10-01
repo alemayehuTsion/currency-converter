@@ -1,0 +1,15 @@
+<Project>
+  <PropertyGroup>
+    <CollectCoverage>true</CollectCoverage>
+    <CoverletOutput>$(MSBuildProjectDirectory)\TestResults\coverage\</CoverletOutput>
+    <CoverletOutputFormat>cobertura</CoverletOutputFormat>
+    <Include>[Currency.Application*];[Currency.Domain*]</Include>
+    <ExcludeByFile>**/Migrations/*.*;**/*Designer.cs;**/Generated/*.*</ExcludeByFile>
+    <Exclude>[*.Tests]*,[xunit.*]*,[FluentAssertions.*]*,[Currency.Infrastructure]*</Exclude>
+    <ExcludeByAttribute>GeneratedCodeAttribute,CompilerGeneratedAttribute,ExcludeFromCodeCoverage</ExcludeByAttribute>
+    <Threshold>90</Threshold>
+    <ThresholdType>line</ThresholdType>
+    <ThresholdStat>total</ThresholdStat>
+    <ThresholdAction>Warn</ThresholdAction>
+  </PropertyGroup>
+</Project>
