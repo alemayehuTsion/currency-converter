@@ -17,6 +17,9 @@ builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddProblemDetails();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
+// Add Memory Cache
+builder.Services.AddMemoryCache();
+
 // Register MediatR and FluentValidation
 builder.Services.AddMediatR(cfg =>
     cfg.RegisterServicesFromAssembly(typeof(IAssemblyMarker).Assembly)

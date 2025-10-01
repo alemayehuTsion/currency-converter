@@ -1,6 +1,8 @@
 ﻿using System.Net.Http.Headers;
+using Currency.Infrastructure.Caching;
 using Currency.Infrastructure.Providers.Frankfurter;
 using Currency.Infrastructure.Resilience;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -16,6 +18,7 @@ public static class DependencyInjection
     )
     {
         services.Configure<FrankfurterOptions>(config.GetSection("Frankfurter"));
+        services.Configure<RateCacheOptions>(config.GetSection("RateCache"));
 
         services
             .AddHttpClient<FrankfurterClient>(
@@ -39,10 +42,15 @@ public static class DependencyInjection
                     return ResiliencePolicies.Create(logger, opts);
                 }
             );
-        services.AddScoped<
-            Application.Abstractions.IExchangeRateProvider,
-            FrankfurterRateProvider
-        >();
+
+        services.AddScoped<FrankfurterRateProvider>();
+        services.AddScoped<Application.Abstractions.IExchangeRateProvider>(sp =>
+        {
+            var inner = sp.GetRequiredService<FrankfurterRateProvider>();
+            var cache = sp.GetRequiredService<IMemoryCache>();
+            var opts = sp.GetRequiredService<IOptions<RateCacheOptions>>();
+            return new CachedExchangeRateProvider(inner, cache, opts);
+        });
 
         return services;
     }
