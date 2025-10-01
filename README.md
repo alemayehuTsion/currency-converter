@@ -51,7 +51,7 @@ dotnet build
 
 # Run API
 dotnet run --project Currency.Api
-
+```
 The Swagger UI will be available in Development environment:
 
 https://localhost:5001/swagger
@@ -77,7 +77,8 @@ GET	/api/v1/rates/history	?base=USD&from=2024-01-01&to=2024-01-31&page=1&pageSiz
 POST	/api/v1/convert	{ "from": "EUR", "to": "USD", "amount": 100 }
 
 
-🧰 Postman Collection
+**🧰 Postman Collection**
+
 This repo includes a ready-to-use Postman collection: CurrencyConverter.postman_collection.json.
 
 Features:
@@ -88,10 +89,12 @@ Injects Authorization: Bearer {{token}} automatically.
 
 Includes helper requests to switch roles (reader, converter, admin).
 
-🧪 Testing & Quality Assurance
+**🧪 Testing & Quality Assurance**
+
 This section demonstrates compliance with the 90%+ unit test coverage and integration test requirements.
 
-1. Unit Test Coverage (90%+ Achieved)
+**1. Unit Test Coverage (90%+ Achieved)**
+
 All core business logic and domain rules are fully covered. The configuration is set to filter the threshold check to validate the reliability of the business core.
 
 Module	Line Coverage	Branch Coverage	Status
@@ -102,58 +105,64 @@ Total (Filtered)	100%	100%	✅ Target Met
 
 Note: The Currency.Infrastructure module is explicitly excluded from the final total calculation via the <Exclude> filter to focus the 90% requirement on the testable business core.
 
-2. Coverage Reporting
+**2. Coverage Reporting**
+
 The build process is configured to generate the Cobertura XML report and an interactive HTML report.
 
 Bash
 
-# Command to run tests and collect coverage
+#### Command to run tests and collect coverage
 dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura
 
-# Command to generate HTML report (ReportGenerator must be installed)
+#### Command to generate HTML report (ReportGenerator must be installed)
 dotnet tool install -g dotnet-reportgenerator-globaltool
 reportgenerator -reports:**/coverage.cobertura.xml -targetdir:CoverageReport
 The detailed report location is CoverageReport/index.html (viewable in any web browser).
 
-3. Integration Tests (Verifying API Interactions)
-Integration tests are implemented using WebApplicationFactory<Program> to verify end-to-end service behavior, including cross-cutting concerns:
+**3. Integration Tests (Verifying API Interactions)**
 
-Caching Validation: Tests verify that the CachedExchangeRateProvider correctly returns cached data on subsequent calls, ensuring the external API is hit only once per TTL.
+- Integration tests are implemented using WebApplicationFactory<Program> to verify end-to-end service behavior, including cross-cutting concerns:
 
-Resilience Check: Tests use mocked HTTP handlers to simulate network failures (timeouts, 503s), validating that the Polly policies (Retry and Circuit Breaker) engage correctly before the request fails.
+- Caching Validation: Tests verify that the CachedExchangeRateProvider correctly returns cached data on subsequent calls, ensuring the external API is hit only once per TTL.
 
-API Scenarios: Covers full request lifecycle, including JWT authentication, conversion logic, rate limiting enforcement, and global error handling for invalid input.
+- Resilience Check: Tests use mocked HTTP handlers to simulate network failures (timeouts, 503s), validating that the Polly policies (Retry and Circuit Breaker) engage correctly before the request fails.
 
-📊 Observability
-Logging: Serilog structured logs in JSON format for easy ingestion by log aggregators.
+- API Scenarios: Covers full request lifecycle, including JWT authentication, conversion logic, rate limiting enforcement, and global error handling for invalid input.
 
-Request Enrichment: Logs are enriched with correlation details (TraceId, ClientIP, ClientId, Path, Method, ResponseCode, Duration).
+**📊 Observability**
 
-Tracing: An OpenTelemetry tracing pipeline is configured (console exporter enabled by default), with requests to the Frankfurter API being traced and correlated.
+- Logging: Serilog structured logs in JSON format for easy ingestion by log aggregators.
 
-📦 Deployment & Future Work
-Multi-environment config (appsettings.{Environment}.json).
+- Request Enrichment: Logs are enriched with correlation details (TraceId, ClientIP, ClientId, Path, Method, ResponseCode, Duration).
 
-Stateless design supporting horizontal scaling.
+- Tracing: An OpenTelemetry tracing pipeline is configured (console exporter enabled by default), with requests to the Frankfurter API being traced and correlated.
 
-Containerized with Docker, ready for CI/CD pipelines.
+**📦 Deployment & Future Work**
 
-Cache layer swappable to Redis for distributed caching.
+- Multi-environment config (appsettings.{Environment}.json).
 
-📝 Assumptions
-Frankfurter API is the primary exchange rate provider.
+- Stateless design supporting horizontal scaling.
 
-No external DB persistence is required (stateless API).
+- Containerized with Docker, ready for CI/CD pipelines.
 
-Rate limits are conservative by default; can be tuned.
+- Cache layer swappable to Redis for distributed caching.
 
-Observability defaults to console for simplicity.
+**📝 Assumptions**
 
-🔮 Future Enhancements
-Implement a Multi-Provider Strategy to query and fall back between different currency APIs.
+- Frankfurter API is the primary exchange rate provider.
 
-Add dedicated health checks (/health and /health/ready).
+- No external DB persistence is required (stateless API).
 
-Connect OpenTelemetry to a visual back-end (Jaeger/Zipkin/ELK stack).
+- Rate limits are conservative by default; can be tuned.
 
-Add GraphQL endpoint for flexible queries.
+- Observability defaults to console for simplicity.
+
+**🔮 Future Enhancements**
+
+- Implement a Multi-Provider Strategy to query and fall back between different currency APIs.
+
+- Add dedicated health checks (/health and /health/ready).
+
+- Connect OpenTelemetry to a visual back-end (Jaeger/Zipkin/ELK stack).
+
+- Add GraphQL endpoint for flexible queries.
