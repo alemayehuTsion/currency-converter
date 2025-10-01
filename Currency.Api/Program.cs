@@ -2,9 +2,9 @@ using Currency.Api.Errors;
 using Currency.Application;
 using Currency.Application.Behaviors;
 using Currency.Application.Features.Convert;
+using Currency.Application.Features.RatesHistory;
 using Currency.Application.Features.RatesLatest;
 using Currency.Infrastructure;
-using Currency.Infrastructure.Providers.Frankfurter;
 using FluentValidation;
 using MediatR;
 
@@ -63,6 +63,31 @@ app.MapPost(
     )
     .WithName("ConvertCurrency")
     .Produces<ConvertCurrencyResult>(StatusCodes.Status200OK)
+    .Produces(StatusCodes.Status400BadRequest)
+    .WithTags("v1");
+
+app.MapGet(
+        "/api/v1/rates/history",
+        async (
+            IMediator mediator,
+            string @base,
+            DateOnly from,
+            DateOnly to,
+            int page,
+            int pageSize,
+            CancellationToken ct
+        ) =>
+        {
+            // defaults if client omits page/pageSize
+            var p = page <= 0 ? 1 : page;
+            var ps = pageSize <= 0 ? 30 : pageSize;
+
+            var result = await mediator.Send(new HistoryQuery(@base, from, to, p, ps), ct);
+            return Results.Ok(result);
+        }
+    )
+    .WithName("GetRatesHistory")
+    .Produces<HistoryResponse>(StatusCodes.Status200OK)
     .Produces(StatusCodes.Status400BadRequest)
     .WithTags("v1");
 
