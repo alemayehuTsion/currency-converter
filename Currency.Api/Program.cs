@@ -1,8 +1,12 @@
+using Currency.Infrastructure;
+using Currency.Infrastructure.Providers.Frankfurter;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+builder.Services.AddInfrastructure(builder.Configuration);
 
 var app = builder.Build();
 
@@ -10,32 +14,23 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.UseSwaggerUI(o =>
+    {
+        o.SwaggerEndpoint("/openapi/v1.json", "Currency API v1");
+        o.RoutePrefix = "swagger"; // so UI lives at /swagger
+    });
+
+    app.MapGet(
+        "/dev/ping-frankfurter",
+        async (FrankfurterClient client, string? @base, HttpContext ctx) =>
+        {
+            using var resp = await client.GetLatestAsync(@base ?? "EUR", ctx.RequestAborted);
+            var body = await resp.Content.ReadAsStringAsync(ctx.RequestAborted);
+            return Results.Content(body, "application/json");
+        }
+    );
 }
 
 app.UseHttpsRedirection();
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
-
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast");
-
 app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
