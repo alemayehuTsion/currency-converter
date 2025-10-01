@@ -1,6 +1,3 @@
 ﻿namespace Currency.Application;
 
-public class Class1
-{
-
-}
+public interface IAssemblyMarker;
